@@ -152,7 +152,7 @@ class: inverse, center, middle, hide-logo
 <span style='font-size:25pt; color:#FFFFFF'> ICH E9 (R1): "...missing data and loss-to-follow-up are irrelevant to the construction of the estimand."  </span>
 
 ---
-# Win Ratio
+# Win Ratio <span style='font-size:18pt; color:black'> `r icons::fontawesome("arrow-circle-right")` </span> <span style='font-size:23pt; color:black'> Challenge </span>  
 
 --
 
@@ -174,7 +174,7 @@ class: inverse, center, middle, hide-logo
 
 
 ---
-# Win Ratio <span style='font-size:23pt; color:black'> General Framework</span>
+# Win Ratio <span style='font-size:18pt; color:black'> `r icons::fontawesome("arrow-circle-right")` </span>  <span style='font-size:23pt; color:black'> General Framework</span>
 
 .bold[Notations]
 
@@ -204,11 +204,7 @@ First, let me introduce some necessary notations. Let D denote survival and N_D 
 
 --
 
-.bold[Win function]
-
---
-
-Define the win indicator function for two independent subjects with
+.bold[Win function]: Define the win indicator function for two independent subjects with
 $\boldsymbol{Y}_{i}$ and $\boldsymbol{Y}_{j}$ as  </span><span style='font-size:13pt; color:#707070'> (Mao and Wang, 2021) </span>
 <span style='color:#0479a8'>
 $$\mathcal{W}(\boldsymbol{Y}_{i},\boldsymbol{Y}_{j})(t) = I(\boldsymbol{Y}_{i} \text{ wins over }\boldsymbol{Y}_{j}\text{ up to time } t).$$</span>
@@ -235,6 +231,8 @@ where $\boldsymbol{Y}^{(a)}$ denote the potential outcome under group $a$ ( $0$ 
   - Inverse probability censoring weighting (IPCW) <span style='font-size:13pt; color:#707070'> (Dong et al., 2020, 2021) </span> 
   
   - Multiple imputation <span style='font-size:13pt; color:#707070'> (Wang et al., 2023, 2024) </span> 
+
+--
 
 <b><span style='color:#ea5455'>Impute the response outcomes up to time $\tau$ </span></b>  <span style='font-size:13pt; color:#707070'> (Wang et al., 2023, 2024) </span> 
 
