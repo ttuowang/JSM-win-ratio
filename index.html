@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Win ratio: estimand, estimation and regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="author" content="Tuo Wang" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/lilly.css" rel="stylesheet" />
+    <link href="libs/remark-css/lilly-fonts.css" rel="stylesheet" />
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-progressBar/progress-bar.js"></script>
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link href="libs/htmltools-fill/fill.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <script src="libs/jquery/jquery-3.6.0.min.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Win ratio: estimand, estimation and regression
+]
+.author[
+### 
+]
+.author[
+### Tuo Wang
+]
+.institute[
+### Eli Lilly and Company
+]
+.institute[
+### 
+]
+.institute[
+### 
+]
+.institute[
+### 
+]
+.institute[
+### Joint work with Yongming Qu, Ying Grace Li, Lu Mao
+]
+.date[
+### JSM Portland 2024-08-06
+]
+
+---
+
+
+
+
+<style>.xe__progress-bar__container {
+  top:0;
+  opacity: 1;
+  position:absolute;
+  right:0;
+  left: 0;
+}
+.xe__progress-bar {
+  height: 10px;
+  background-color: #ea5455;
+  width: calc(var(--slide-current) / var(--slide-total) * 100%);
+}
+.remark-visible .xe__progress-bar {
+  animation: xe__progress-bar__wipe 200ms forwards;
+  animation-timing-function: cubic-bezier(.86,0,.07,1);
+}
+@keyframes xe__progress-bar__wipe {
+  0% { width: calc(var(--slide-previous) / var(--slide-total) * 100%); }
+  100% { width: calc(var(--slide-current) / var(--slide-total) * 100%); }
+}</style><style>:root{--panel-tab-active-foreground:#0051BA;--panel-tab-hover-foreground:#d22;}</style>
+
+---
+
+# Composite Endpoints
+
+--
+
+#### Composite endpoints include two or more types of related clinical events 
+
+--
+
+- Common in cardiovascular (CV) clinical trials and cancer clinical trials
+  
+  - CV trials: death, heart failure, myocardial infarction, stroke, and hospitalization
+
+- Increase number of events, increase statistical efficiency, reduce sample size
+
+--
+
+#### Traditional Methods on Composite Endpoints
+
+--
+
+- Focus on time to the first event (TFE)
+
+- Ignore the hierarchical structure 
+
+- Assume death and non-fatal events are equally important
+
+---
+class: inverse, center, middle
+
+# Death 💀 `\(&gt;\)` Hospitalization 🏥
+
+---
+class: inverse, center, middle
+
+## <span>&lt;i class="fas  fa-arrow-circle-right faa-passing animated "&gt;&lt;/i&gt;</span> Win ratio (Pocock et al. 2012)
+
+
+
+---
+# Win statistics
+
+--
+
+- .bold[General pairwise comparisons]: compare every patient in the treatment with every one in the control
+
+--
+
+- Within each pair
+
+  - Decide a "win", a "lose" or a "tie"
+  
+  - First compare on the most important event: time to death 
+  
+  - If the comparison is inconclusive due to censoring, proceed to the second most important event
+
+--
+
+&lt;img src="figures/chap3/Adeath.jpg" width="32%" /&gt;
+--
+&lt;img src="figures/chap3/Ahosp.jpg" width="32%" /&gt;
+--
+&lt;img src="figures/chap3/tie.jpg" width="32%" /&gt;
+
+---
+# Win statistics
+
+--
+
+Define
+
+- `\(N_t\)` and `\(N_c\)`: number of subjects in treatment and control group
+
+- `\(n_t\)` and `\(n_c\)`: number of wins by treatment and control group
+
+--
+
+- `\(P_t = \frac{n_t}{N_tN_c}\)`: proportions of pairs when treatment wins
+
+- `\(P_c = \frac{n_c}{N_tN_c}\)`: proportions of pairs when control wins
+
+- `\(P_{\text{tie}} = 1-P_t-P_c\)`: proportions of ties
+
+--
+
+The treatment effect can be quantified by a series of win statistics:
+
+- net benefit &lt;/span&gt;&lt;span style='font-size:13pt; color:#707070'&gt; (Buyse, 2010) &lt;/span&gt; : `\(P_t - P_c\)`
+
+- **win ratio** &lt;/span&gt;&lt;span style='font-size:13pt; color:#707070'&gt; (Pocock, 2012) &lt;/span&gt;: `\({P_t}/{P_c}\)`
+
+- win odds &lt;/span&gt;&lt;span style='font-size:13pt; color:#707070'&gt; (Dong, 2020) &lt;/span&gt;: `\((P_t + 0.5P_{\text{tie}})/(P_c + 0.5P_{\text{tie}})\)`
+
+---
+# Win Ratio &lt;span style='font-size:18pt; color:black'&gt; &lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; &lt;/span&gt; &lt;span style='font-size:23pt; color:black'&gt; Challenge &lt;/span&gt;  
+
+#### Challenge 1
+
+- The true value (estimand) of win ratio depends on the censoring distribution and the maximum follow-up time
+
+--
+
+`\(\hspace{3cm}\)`&lt;img src="figures/chap3/Adeatht1.jpg" width="35%" /&gt;
+--
+&lt;img src="figures/chap3/Adeatht2.jpg" width="35%" /&gt;
+
+
+---
+class: inverse, center, middle, hide-logo
+
+&lt;span style='font-size:25pt; color:#FFFFFF'&gt; ICH E9 (R1): "...missing data and loss-to-follow-up are irrelevant to the construction of the estimand."  &lt;/span&gt;
+
+---
+# Win Ratio
+
+--
+
+#### Challenge 2
+
+- Previous work on win ratio focus on two-sample comparison
+
+--
+
+- **Regression framework vs. two-sample comparison:**
+
+  - Covariate adjustment
+  
+  - Statistical efficiency 
+
+  - Subgroup analysis 
+
+  - Adjusting confounders (observational studies)
+
+
+---
+# Win Ratio &lt;span style='font-size:23pt; color:black'&gt; General Framework&lt;/span&gt;
+
+.bold[Notations]
+
+- `\(D\)`: survival time and `\(N_D(t) = I(D\leq t)\)` 
+
+- `\(N_1(t),\ldots,N_K(t)\)` denote the counting processes of `\(K\)` non-fatal
+events ordered by importance
+
+- `\(\bar{N}(t) = \{N(u):0\leq u\leq t\}\)` : event-history process
+
+- `\(Y_1(t), \ldots, Y_J(t)\)` : `\(J\)` longitudinal variables measured at time `\(t\)`
+
+- Covaraite history `\(\bar{Y}_j(t) = \{Y_j(u): 0 \leq u \leq t\}\)` 
+
+- `\(\boldsymbol{Y}(t) = \left\{ \bar{N}_D(t),\bar{N}_1(t),\ldots,\bar{N}_K(t), \bar{Y}_1(t), \ldots, \bar{Y}_J(t) \right\}\)`
+
+- For all notations, we use subscripts `\(i\)` and `\(j\)` to denote the corresponding values from subjects `\(i\)` and `\(j\)`
+
+- `\(\tau\)`: maximum follow-up time or user specified time
+
+???
+
+First, let me introduce some necessary notations. Let D denote survival and N_D is the counting process of Death, which is an indication function. Let N1 to Nk represent the counting processes of K non-fatal events. Let N bar t represent the event history process. We also consider some longitudinal data as well. Let Yt be the set of all the event history processes. Note that for all these notations, we will use subscripts i and j to represent different subjects.
+
+---
+# Restricted Time Win Ratio &lt;span style='font-size:18pt; color:black'&gt; &lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; &lt;/span&gt; &lt;span style='font-size:23pt; color:black'&gt; Estimand &lt;/span&gt;  
+
+--
+
+.bold[Win function]
+
+--
+
+Define the win indicator function for two independent subjects with
+`\(\boldsymbol{Y}_{i}\)` and `\(\boldsymbol{Y}_{j}\)` as  &lt;/span&gt;&lt;span style='font-size:13pt; color:#707070'&gt; (Mao and Wang, 2021) &lt;/span&gt;
+&lt;span style='color:#0479a8'&gt;
+`$$\mathcal{W}(\boldsymbol{Y}_{i},\boldsymbol{Y}_{j})(t) = I(\boldsymbol{Y}_{i} \text{ wins over }\boldsymbol{Y}_{j}\text{ up to time } t).$$`&lt;/span&gt;
+
+--
+
+&lt;b&gt;&lt;span style='color:#ea5455'&gt;Estimand&lt;/span&gt;&lt;/b&gt; : the restricted time win ratio (RTWR) for multivariate hierarchical variables &lt;span style='font-size:13pt; color:#707070'&gt; (Wang et al., 2024, JBS) &lt;/span&gt;
+&lt;span style='color:#0479a8'&gt;
+`$$\mbox{RTWR}(\tau) = \frac{\text{E}\{ \mathcal{W}(\boldsymbol Y^{(1)}, \boldsymbol Y^{(0)})(\tau)\}}{\text{E}\{ \mathcal{W}(\boldsymbol Y^{(0)}, \boldsymbol Y^{(1)})(\tau)\}},$$`&lt;/span&gt;
+where `\(\boldsymbol{Y}^{(a)}\)` denote the potential outcome under group `\(a\)` ( `\(0\)` : control, `\(1\)` : treatment )
+
+--
+
+&lt;b&gt;&lt;span style='color:#ea5455'&gt;Interpretation&lt;/span&gt;&lt;/b&gt;:  number of times subjects in the treatment are likely to have a favorable outcome compared to those in the control by time `\(\tau\)`
+
+
+---
+# Restricted Time Win Ratio &lt;span style='font-size:18pt; color:black'&gt; &lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; &lt;/span&gt; &lt;span style='font-size:23pt; color:black'&gt; Estimation &lt;/span&gt;
+
+--
+
+&lt;b&gt;&lt;span style='color:#ea5455'&gt;Estimation&lt;/span&gt;&lt;/b&gt; 
+
+  - Inverse probability censoring weighting (IPCW) &lt;span style='font-size:13pt; color:#707070'&gt; (Dong et al., 2020, 2021) &lt;/span&gt; 
+  
+  - Multiple imputation &lt;span style='font-size:13pt; color:#707070'&gt; (Wang et al., 2023, 2024) &lt;/span&gt; 
+
+&lt;b&gt;&lt;span style='color:#ea5455'&gt;Impute the response outcomes up to time `\(\tau\)` &lt;/span&gt;&lt;/b&gt;  &lt;span style='font-size:13pt; color:#707070'&gt; (Wang et al., 2023, 2024) &lt;/span&gt; 
+
+--
+
+`\(\hspace{3cm}\)`&lt;img src="figures/chap4/imp1.jpg" width="35%" /&gt;
+--
+&lt;img src="figures/chap4/imp2.jpg" width="43%" /&gt;
+
+--
+
+- **Advantages:**  Estimation of the win ratio is fairly easy if all data are observed.
+
+---
+# Win Ratio Regression &lt;span style='font-size:18pt; color:black'&gt; &lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; &lt;/span&gt; &lt;span style='font-size:23pt; color:black'&gt; Formulation &lt;/span&gt;
+
+--
+
+Define `\(\boldsymbol{Z} \in \mathbb{R}^p\)` a vector of baseline covariates, the **proportional win-fractions (PW) regression** models &lt;span style='font-size:13pt; color:#707070'&gt; (Mao and Wang, 2021, Biometrics)&lt;/span&gt;
+&lt;span style='color:#0479a8'&gt;
+`$$\frac{E\left\{\mathcal{W}(\boldsymbol{Y}_{i},\boldsymbol{Y}_{j})( t ) | \boldsymbol{Z}_{i}, \boldsymbol{Z}_{j}\right\}}{E\left\{\mathcal{W}(\boldsymbol{Y}_{j},\boldsymbol{Y}_{i})( t ) | \boldsymbol{Z}_{i}, \boldsymbol{Z}_{j}\right\}} =\exp \left\{\boldsymbol{\beta}^{\mathrm{T}}\left(\boldsymbol{Z}_{i}-\boldsymbol{Z}_{j}\right)\right\}$$`&lt;/span&gt;
+
+--
+
+- &lt;b&gt;&lt;span style='color:#ea5455'&gt; Interpretation: &lt;/span&gt;&lt;/b&gt; `\(\beta_k\)` can be interpreted as the log win ratio associated with a one-unit increase in covariate `\(Z_k\)` when the other predictors are fixed
+
+--
+
+- &lt;b&gt;&lt;span style='color:#ea5455'&gt; Assumption: &lt;/span&gt;&lt;/b&gt; Covariate-specific win and loss fractions are proportional over time
+
+  - Estimand independent of censoring distribution
+
+--
+
+- Equivalent to a Cox PH model on TFE if `\(\mathcal{W}\)` is defined as the comparison on the TFE. 
+
+???
+
+This model is similar to logistic regression and cox model.
+
+Under the model, the covariate-specific win and loss fractions are proportional over time, that is the win ratio remain constant over time. This proportionality assumption is very similar with the proportional hazard assumption in cox ph model. Actually, our model can be degenerated to a cox ph model under some certain condition. 
+
+Pocock two sample win ratio is a special case with Z being binary and one-dimensional.
+
+
+---
+class: center, middle
+
+&lt;span style='font-size:25pt; color:#ea5455'&gt; What if proportionality assumption fails? &lt;/span&gt;
+
+--
+
+&lt;span style='font-size:18pt; color:black'&gt; <span>&lt;i class="fas  fa-arrow-circle-right faa-passing animated "&gt;&lt;/i&gt;</span> Stratify on nonproportional covariates &lt;/span&gt;
+
+???
+
+However, in practice, the proportionality assumption may not always hold for all predictors.
+What should we do if the proportionality assumption fails. One way to solve  this problem is stratification. It is commonly used in many clinical trials. When the proportional hazards assumption does not hold, the stratified Cox model and the stratified Fine-Gray model are recommended for time-to-first-event analyses and competing risks data.
+
+---
+# The stratified PW models &lt;span style='font-size:18pt; color:black'&gt; &lt;svg viewBox="0 0 512 512" style="height:1em;position:relative;display:inline-block;top:.1em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; &lt;/span&gt; &lt;span style='font-size:23pt; color:black'&gt; Formulation&lt;/span&gt;
+
+--
+
+- Stratified variable : `\(L\)` levels
+
+- `\(li\)` and `\(lj\)` denote the corresponding values from subjects `\(i\)` and `\(j\)` in stratum `\(l = 1,\ldots,L\)`
+
+--
+
+A **stratified proportional win-fractions (PW) model** can be
+formulated as &lt;span style='font-size:13pt; color:#707070'&gt; (Wang and Mao, 2022, Stats in Med)&lt;/span&gt;
+
+&lt;span style='color:#0479a8'&gt;
+`$$\mathcal{R}\left(t \mid \boldsymbol{Z}_{l i}, \boldsymbol{Z}_{l j} ; \mathcal{W}\right) \equiv \frac{E\left\{\mathcal{W}(\boldsymbol{Y}_{li},\boldsymbol{Y}_{lj})(t) | \boldsymbol{Z}_{li}, \boldsymbol{Z}_{lj}\right\}}{E\left\{\mathcal{W}(\boldsymbol{Y}_{lj},\boldsymbol{Y}_{li})(t) | \boldsymbol{Z}_{li}, \boldsymbol{Z}_{lj}\right\}} =\exp \left\{\boldsymbol{\beta}^{\mathrm{T}}\left(\boldsymbol{Z}_{l i}-\boldsymbol{Z}_{l j}\right)\right\} \quad(l=1, \ldots, L).$$`
+&lt;/span&gt;
+where
+`\(\boldsymbol{\beta} = (\beta_1, \ldots, \beta_p)^T\)` is a `\(p\)`-dimensional
+regression parameters shared by all `\(L\)` groups.
+
+--
+
+- &lt;b&gt;&lt;span style='color:#ea5455'&gt; Assumption: &lt;/span&gt;&lt;/b&gt; Covariate-specific win and loss fractions are proportional over time **within each stratum**
+
+--
+
+- Equivalent to a stratified Cox PH model on TFE if `\(\mathcal{W}\)` is defined as the comparison on the TFE. 
+
+---
+# The stratified PW models 
+
+.panelset[
+
+.panel[.panel-name[ Check assumption ]
+
+
+
+.bold[Check proportionality]:
+
+  - Plot residuals (observed vs model-based win-fractions) over time 
+  
+  - Should fluctuate around zero without any systemic pattern
+  
+  - Example: ACCORD trial &lt;span style='font-size:13pt; color:#707070'&gt; (Raz et al., 2009) &lt;/span&gt;
+
+&lt;img src="figures/chap3/proportionality.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+  - Stratify on nonproportional covariate: `sex`
+
+
+]
+
+.panel[.panel-name[ACCORD results]
+.left-column[
+
+- Sex-stratified analysis
+
+- WR for treatment: 1.17
+
+]
+
+.right-column[
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-94df32b0c1a5bec7079f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-94df32b0c1a5bec7079f">{"x":{"filter":"none","vertical":false,"class":"display","data":[["Fibrate vs Placebo","Intensive vs Standard","Baseline age","White vs Non-white","Glycated hemoglobin","Plasma triglyceride","LDL cholesterol","HDL cholesterol"],["<span style=\"color:#dc2f02\">1.17<\/span>","0.87","0.97","0.86","0.93","1.00","1.00","1.04"],["<span style=\"color:#dc2f02\">(0.90, 1.51)<\/span>","(0.67, 1.12)","(0.96, 0.99)","(0.63, 1.18)","(0.82, 1.06)","(1.00, 1.00)","(1.00, 1.01)","(1.01, 1.07)"],["<span style=\"color:#dc2f02\">0.243<\/span>","0.273","0.005**","0.360","0.308","0.978","0.797","0.009**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th rowspan=\"2\">Variable<\/th>\n      <th colspan=\"3\">Sex-stratified PW<\/th>\n    <\/tr>\n    <tr>\n      <th>WR<\/th>\n      <th>95%CI<\/th>\n      <th>P-value<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","pageLength":10,"columnDefs":[{"className":"dt-center","targets":[0,1,2,3]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+]
+]
+
+]
+
+---
+# Summary
+
+&lt;br&gt;
+
+- Prioritized composite endpoints
+
+  - estimand (hypothesis testing) `\(\,\,\,\)` <span>&lt;i class="fas  fa-arrow-circle-right faa-passing animated faa-slow "&gt;&lt;/i&gt;</span> `\(\,\,\,\)` .uw-anchor-color[restricted time win ratio] 
+  
+  - regression `\(\,\,\,\)` <span>&lt;i class="fas  fa-arrow-circle-right faa-passing animated faa-slow "&gt;&lt;/i&gt;</span> `\(\,\,\,\)`  .uw-anchor-color[ (stratified) proportional win-fractions models]
+  
+
+- R-package: [`WR`](https://cran.r-project.org/web/packages/WR/index.html)
+
+  - Calculate two sample win ratio
+  - Fit (stratified) PW model
+  - Examine proportionality assumption
+
+- Imputation R-package is being developed
+
+---
+# <span class=" faa-float animated " style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">References</span> 
+
+- Wang, T., Li, Y., and Qu, Y. (2024). Win ratio: from estimands to estimation. *Statistics in Biopharmaceutical Research*
+
+- Wang, T., Zilinskas, R., Li, Y, Qu, Y. (2023). Missing data imputation for a multivariate outcome of mixed variable types. *Statistics in Biopharmaceutical Research*, doi: 10.1080/19466315.2023.2169753
+
+- Wang, T and Mao, L. (2022). Stratified proportional win-fractions regression analysis. *Statistics in Medicine*, 41, 5305-5318
+
+- Mao, L. and Wang, T. (2021). A Class of Proportional Win-Fractions Regression Models for Composite Outcomes. *Biometrics*, 77, 1265-1275
+
+
+---
+class: center, middle
+
+<span class=" faa-pulse animated " style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">&lt;span style='font-size:55pt; color:#cc0033'&gt; Thanks! &lt;/span&gt;</span>
+
+&lt;br&gt;
+Full references: https://tuowang.rbind.io/blog/2021-01-15-win-ratio-references/
+
+<span>&lt;i class="fas  fa-envelope-open faa-float animated " style=" color:#222831;"&gt;&lt;/i&gt;</span> : tuo.wang@lilly.com
+
+<span>&lt;i class="fab  fa-twitter faa-float animated " style=" color:#00acee;"&gt;&lt;/i&gt;</span> : @alextuowang
+
+<span>&lt;i class="fas  fa-id-card faa-float animated " style=" color:#393E46;"&gt;&lt;/i&gt;</span> : tuowang.rbind.io
+
+
+
+---
+class: inverse, center, middle
+
+## .fancy[Appendix] 
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
