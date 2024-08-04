@@ -69,7 +69,7 @@ xaringanExtra::style_panelset_tabs(
 ---
 class: inverse, center, middle
 
-# Death `r emo::ji("skull")` $>$ Hospitalization `r emo::ji("hospital")`
+# Death  $>$ Hospitalization 
 
 ---
 class: inverse, center, middle
