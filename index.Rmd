@@ -1,5 +1,5 @@
 ---
-title: "Win ratio: estimand, estimation and regression"
+title: "Win ratio: estimand, estimation and regression (test)"
 author: 
   - ""
   - "Tuo Wang"
