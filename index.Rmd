@@ -331,8 +331,6 @@ regression parameters shared by all $L$ groups.
 
 .panel[.panel-name[ Check assumption ]
 
-
-
 .bold[Check proportionality]:
 
   - Plot residuals (observed vs model-based win-fractions) over time 
@@ -397,7 +395,6 @@ DT::datatable(
 ```
 ]
 ]
-
 ]
 
 ---
