@@ -22,6 +22,9 @@ output:
       countIncrementalSlides: false
       ratio: "16:9"
 ---
+class: center, middle
+
+Slides link: https://ttuowang.github.io/JSM-win-ratio/
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
