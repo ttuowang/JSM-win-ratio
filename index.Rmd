@@ -415,7 +415,6 @@ DT::datatable(
   - Fit (stratified) PW model
   - Examine proportionality assumption
 
-- Imputation R-package is being developed
 
 ---
 # `r anicon::nia("References", animate = "float")` 
@@ -435,11 +434,11 @@ class: center, middle
 `r anicon::nia("<span style='font-size:55pt; color:#cc0033'> Thanks! </span>", animate = "pulse")`
 
 <br>
-Full references: https://tuowang.rbind.io/blog/2021-01-15-win-ratio-references/
+Slides link: https://ttuowang.github.io/JSM-win-ratio/
+
+Win ratio references: https://tuowang.rbind.io/blog/2021-01-15-win-ratio-references/
 
 `r anicon::faa("envelope-open", animate="float", color="#222831")` : tuo.wang@lilly.com
-
-`r anicon::faa("twitter", animate="float", color="#00acee")` : @alextuowang
 
 `r anicon::faa("id-card", animate="float", color="#393E46")` : tuowang.rbind.io
 
